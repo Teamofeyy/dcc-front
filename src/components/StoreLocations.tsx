@@ -1,7 +1,7 @@
 import { MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export function StoreLocations() {
+export default function StoreLocations() {
   return (
     <div className="relative w-full h-[300px] bg-gray-200">
       {/* This would typically be a real map component */}

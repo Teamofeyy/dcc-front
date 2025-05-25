@@ -10,8 +10,7 @@ import {
   Tooltip,
 } from 'recharts'
 
-export function ShipmentsChart() {
-  // Sample data for the chart
+export default function ShipmentsChart() {
   const data = [
     { location: 'Abuja', value: 20000 },
     { location: 'Lagos', value: 40000 },

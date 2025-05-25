@@ -1,10 +1,8 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 
-export function DeliveriesChart() {
-  // Data for the pie chart
+export default function DeliveriesChart() {
   const data = [
     { name: 'Ontime', value: 78, color: '#F67366' },
     { name: 'In Progress', value: 12, color: '#FFF6DF' },
@@ -33,7 +31,6 @@ export function DeliveriesChart() {
           </PieChart>
         </ResponsiveContainer>
 
-        {/* Center text overlay */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <span className="text-3xl font-bold">78</span>
@@ -56,10 +53,6 @@ export function DeliveriesChart() {
           </div>
         ))}
       </div>
-
-      <Button variant="outline" className="mt-4 w-full">
-        Download Statistics
-      </Button>
     </div>
   )
 }

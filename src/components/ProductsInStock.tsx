@@ -1,4 +1,4 @@
-export function ProductsInStock() {
+export default function ProductsInStock() {
   const products = [
     {
       id: 1,

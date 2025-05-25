@@ -9,7 +9,7 @@ export const PrivateRoute = ({ children }: { children: JSX.Element }) => {
     return <div>Загрузка...</div> // или спиннер
   }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />
+  return isAuthenticated ? children : <Navigate to="/auth" replace />
 }
 
 export default PrivateRoute

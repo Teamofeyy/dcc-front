@@ -7,7 +7,6 @@ import {
   CardContent,
   CardFooter,
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { AuthService } from '@/services/auth.service'
 import { useState, useEffect, type FC } from 'react'
 import { useAuth } from '@/hooks/use-auth'
@@ -15,16 +14,10 @@ import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import type { AxiosError } from 'axios'
+import Field from '@/components/Field'
 
 type LoginFormData = z.infer<typeof LoginSchema>
 type RegisterFormData = z.infer<typeof RegisterSchema>
@@ -100,61 +93,28 @@ const Auth: FC = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-5"
               >
-                <FormField
+                <Field
                   control={form.control}
                   name="login"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-700">Логин</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="gena406"
-                          {...field}
-                          className="border-gray-200 focus-visible:ring-[#FF6B6B] focus-visible:ring-opacity-50"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[#FF6B6B]" />
-                    </FormItem>
-                  )}
+                  label="Логин"
+                  placeholder="gena406"
                 />
 
                 {!isLogin && (
-                  <FormField
+                  <Field
                     control={form.control}
                     name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-gray-700">Имя</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Генадий"
-                            {...field}
-                            className="border-gray-200 focus-visible:ring-[#FF6B6B] focus-visible:ring-opacity-50"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-[#FF6B6B]" />
-                      </FormItem>
-                    )}
+                    label="Имя"
+                    placeholder="Генадий"
                   />
                 )}
 
-                <FormField
+                <Field
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-gray-700">Пароль</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="••••••••"
-                          {...field}
-                          className="border-gray-200 focus-visible:ring-[#FF6B6B] focus-visible:ring-opacity-50"
-                        />
-                      </FormControl>
-                      <FormMessage className="text-[#FF6B6B]" />
-                    </FormItem>
-                  )}
+                  label="Пароль"
+                  type="password"
+                  placeholder="••••••••"
                 />
 
                 <Button

@@ -1,9 +1,9 @@
 import type React from 'react'
 import { Link } from 'react-router-dom'
-import { LayoutDashboard, FileText, Package, Truck, Store } from 'lucide-react'
+import { LayoutDashboard, Package, Truck, Store } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-export function Sidebar() {
+export default function Sidebar() {
   return (
     <div className="hidden md:flex flex-col w-64 border-r bg-white">
       <div className="p-6">
@@ -16,10 +16,10 @@ export function Sidebar() {
       <div className="flex-1 px-3 py-2">
         <nav className="space-y-1">
           <NavItem href="/" icon={LayoutDashboard} active>
-            Dashboard
+            Дэшборд
           </NavItem>
-          <NavItem href="/quotations" icon={FileText}>
-            Quotations
+          <NavItem href="/quotations" icon={Package}>
+            Доставки
           </NavItem>
           <NavItem href="/shipments" icon={Package}>
             Shipments
@@ -43,10 +43,10 @@ interface NavItemProps {
   active?: boolean
 }
 
-function NavItem({ icon: Icon, children, active }: NavItemProps) {
+function NavItem({ href, icon: Icon, children, active }: NavItemProps) {
   return (
     <Link
-      to={'/'}
+      to={href}
       className={cn(
         'flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900',
         active && 'bg-[#2C2D5B] text-white hover:text-white'
