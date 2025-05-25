@@ -8,11 +8,11 @@ RUN npm install --frozen-lockfile
 COPY . .
 RUN npm run build
 
-FROM nginx:alpine AS runner
+FROM nginx:1.27.5-alpine-slim AS runner
 
 WORKDIR /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/dist .
+COPY --from=build /app/dist .
 EXPOSE 80
 CMD ["nginx", "-g", "daemon"]
