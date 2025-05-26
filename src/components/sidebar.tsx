@@ -1,6 +1,6 @@
 import type React from 'react'
 import { Link } from 'react-router-dom'
-import { LayoutDashboard, Package, Truck, Store } from 'lucide-react'
+import { LayoutDashboard, Package, Truck, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function Sidebar() {
@@ -21,14 +21,11 @@ export default function Sidebar() {
           <NavItem href="/quotations" icon={Package}>
             Доставки
           </NavItem>
-          <NavItem href="/shipments" icon={Package}>
-            Shipments
+          <NavItem href="/shipments" icon={User}>
+            Пользователи
           </NavItem>
-          <NavItem href="/dispatches" icon={Truck}>
-            Dispatches
-          </NavItem>
-          <NavItem href="/store-management" icon={Store}>
-            Store Management
+          <NavItem href="/transport" icon={Truck}>
+            Транспорт
           </NavItem>
         </nav>
       </div>
