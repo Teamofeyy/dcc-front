@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Package, Warehouse, Truck } from 'lucide-react'
+import { Package, Users, Truck } from 'lucide-react'
 
 export default function DashboardStats() {
   return (
@@ -47,7 +47,7 @@ export default function DashboardStats() {
           <CardTitle className="text-sm font-medium text-gray-500">
             Активные пользователи
           </CardTitle>
-          <Warehouse className="h-4 w-4 text-indigo-900" />
+          <Users className="h-4 w-4 text-indigo-900" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">156</div>

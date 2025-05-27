@@ -13,12 +13,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import ShipmentsChart from '@/components/ShipmentsChart'
 
 export default function WeeklyShipmentsChart() {
-  const [weekFilter, setWeekFilter] = useState('This Week')
+  const [weekFilter, setWeekFilter] = useState('Эта неделя')
   return (
     <Card className="col-span-2 lg:col-span-1">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium">
-          Weekly Shipments Chart
+          Статистика доставок
         </CardTitle>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -28,14 +28,16 @@ export default function WeeklyShipmentsChart() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setWeekFilter('This Week')}>
-              This Week
+            <DropdownMenuItem onClick={() => setWeekFilter('Эта неделя')}>
+              Эта неделя
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setWeekFilter('Last Week')}>
-              Last Week
+            <DropdownMenuItem onClick={() => setWeekFilter('Этот месяц')}>
+              Этот месяц
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setWeekFilter('Last Month')}>
-              Last Month
+            <DropdownMenuItem
+              onClick={() => setWeekFilter('Последние 3 месяца')}
+            >
+              Последние 3 месяца
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

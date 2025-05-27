@@ -1,9 +1,11 @@
 import type React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { LayoutDashboard, Package, Truck, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function Sidebar() {
+  const location = useLocation()
+
   return (
     <div className="hidden md:flex flex-col w-64 border-r bg-white">
       <div className="p-6">
@@ -15,16 +17,24 @@ export default function Sidebar() {
       </div>
       <div className="flex-1 px-3 py-2">
         <nav className="space-y-1">
-          <NavItem href="/" icon={LayoutDashboard} active>
+          <NavItem
+            href="/dashboard"
+            icon={LayoutDashboard}
+            active={location.pathname === '/dashboard'}
+          >
             Дэшборд
           </NavItem>
-          <NavItem href="/quotations" icon={Package}>
+          <NavItem
+            href="/deliveries"
+            icon={Package}
+            active={location.pathname.startsWith('/deliveries')}
+          >
             Доставки
           </NavItem>
-          <NavItem href="/shipments" icon={User}>
+          <NavItem href="/dashboard" icon={User}>
             Пользователи
           </NavItem>
-          <NavItem href="/transport" icon={Truck}>
+          <NavItem href="/dashboard" icon={Truck}>
             Транспорт
           </NavItem>
         </nav>

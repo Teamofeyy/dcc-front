@@ -12,14 +12,13 @@ import {
 
 export default function ShipmentsChart() {
   const data = [
-    { location: 'Abuja', value: 20000 },
-    { location: 'Lagos', value: 40000 },
-    { location: 'Lagos', value: 30000 },
-    { location: 'Accra', value: 15000 },
-    { location: 'Bali', value: 30000 },
-    { location: 'Greece', value: 45000 },
-    { location: 'Milan', value: 25000 },
-    { location: 'USA', value: 20000 },
+    { day: 'Пн', value: 17 },
+    { day: 'Вт', value: 14 },
+    { day: 'Ср', value: 18 },
+    { day: 'Чт', value: 3 },
+    { day: 'Пт', value: 7 },
+    { day: 'Сб', value: 16 },
+    { day: 'Вс', value: 20 },
   ]
 
   return (
@@ -35,17 +34,17 @@ export default function ShipmentsChart() {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="location" />
+          <XAxis dataKey="day" />
           <YAxis
             width={40}
             tickFormatter={(value) => {
               if (value === 0) return '0'
-              return `${value / 1000}K`
+              return value
             }}
           />
           <Tooltip
-            formatter={(value) => [`₦${value}`, 'Value']}
-            labelFormatter={(label) => `Location: ${label}`}
+            formatter={(value) => [`${value}`, 'Кол-во']}
+            labelFormatter={(label) => `День: ${label}`}
           />
           <Area
             type="monotone"

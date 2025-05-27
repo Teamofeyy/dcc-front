@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Landing from './pages/Landing'
 import Auth from './pages/Auth'
 import Dashboard from './pages/Dashboard'
-import ProtectedRoute from './components/ProtectedRoute'
+import PrivateRoute from './components/PrivateRoute'
+import Deliveries from './pages/Deliveries'
 
 function App() {
   return (
@@ -11,14 +12,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<Auth />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/deliveries" element={<Deliveries />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
