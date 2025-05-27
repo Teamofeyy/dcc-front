@@ -2,7 +2,6 @@ import ProductsInStock from '@/components/ProductsInStock'
 import Sidebar from '@/components/Sidebar'
 import { Button } from '@/components/ui/button'
 import { Filter, Menu, Plus } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
 export default function Deliveries() {
   return (
