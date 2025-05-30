@@ -9,7 +9,7 @@ export default function Sidebar() {
   return (
     <div className="hidden md:flex flex-col w-64 border-r bg-white">
       <div className="p-6">
-        <Link to={'/'} className="flex items-center">
+        <Link to={'/dashboard'} className="flex items-center">
           <span className="text-2xl font-bold text-[#2C2D5B]">
             D<span className="text-[#FF6B6B]">CC</span>
           </span>
