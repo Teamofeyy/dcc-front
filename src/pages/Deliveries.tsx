@@ -38,7 +38,6 @@ export default function Deliveries() {
               {/* </Link> */}
             </div>
           </div>
-
           <ProductsInStock variant="detailed" />
         </main>
       </div>
