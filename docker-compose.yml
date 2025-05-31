@@ -73,3 +73,5 @@ services:
 networks:
   frontend-network:
     driver: bridge
+  app-network:
+    driver: bridge
