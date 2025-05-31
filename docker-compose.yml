@@ -1,4 +1,4 @@
-version: '1'
+version: '2'
 services:
   frontend:
     image: teamofey/dcc-frontend:1.2
@@ -8,6 +8,40 @@ services:
       - "80"
     networks:
       - frontend-network
+
+  backend:
+    image: teamofey/dcc-backend:latest
+    container_name: backend
+    restart: always
+    expose:
+      - "9667"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+    depends_on:
+      dcc-pg:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  dcc-pg:
+    image: postgres:17.4
+    container_name: dcc-pg
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres && psql -U postgres -c 'SELECT 1'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 
   nginx:
     image: nginx:alpine

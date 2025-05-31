@@ -3,7 +3,6 @@ name: Frontend build & deploy
 on:
   push:
     branches: [ master ]
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -73,8 +72,8 @@ jobs:
             mkdir -p /${{ secrets.VPS_USER }}/dcc-frontend/certs 2>/dev/null || true
             mkdir -p /${{ secrets.VPS_USER }}/dcc-frontend/certbot 2>/dev/null || true
 
-            docker-compose rm -fs frontend || true
+            docker-compose --env-file .env rm -fs frontend || true
 
             docker pull teamofey/dcc-frontend:1.2
 
-            docker-compose up -d
+            docker-compose --env-file .env up -d --build
