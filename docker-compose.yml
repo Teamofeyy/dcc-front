@@ -1,4 +1,3 @@
-version: '2'
 services:
   frontend:
     image: teamofey/dcc-frontend:1.2
@@ -69,6 +68,9 @@ services:
     entrypoint: /bin/sh -c "trap exit TERM; while :; do sleep 6h & wait $${!}; certbot renew --webroot --webroot-path=/var/www/certbot; done"
     networks:
       - frontend-network
+
+volumes:
+  postgres_data:
 
 networks:
   frontend-network:
