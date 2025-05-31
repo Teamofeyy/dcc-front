@@ -46,6 +46,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Copy docker-compose.yml and nginx.conf to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "docker-compose.yml"
+          target: "/${{ secrets.VPS_USER }}/dcc-frontend/"
+
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@master
         with:
@@ -54,12 +68,13 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT }}
           script: |
-            docker rm -f frontend || true
+            cd /${{ secrets.VPS_USER }}/dcc-frontend
+
+            mkdir -p /${{ secrets.VPS_USER }}/dcc-frontend/certs 2>/dev/null || true
+            mkdir -p /${{ secrets.VPS_USER }}/dcc-frontend/certbot 2>/dev/null || true
+
+            docker-compose rm -fs frontend || true
 
             docker pull teamofey/dcc-frontend:1.2
 
-            docker run -d \
-            --name frontend \
-            -p 8080:80 \
-            --restart always \
-            teamofey/dcc-frontend:1.2
+            docker-compose up -d

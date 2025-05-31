@@ -1,0 +1,41 @@
+version: '1'
+services:
+  frontend:
+    image: teamofey/dcc-frontend:1.2
+    container_name: frontend
+    restart: always
+    expose:
+      - "80"
+    networks:
+      - frontend-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      - frontend
+    networks:
+      - frontend-network
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot-renew
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do sleep 6h & wait $${!}; certbot renew --webroot --webroot-path=/var/www/certbot; done"
+    networks:
+      - frontend-network
+
+networks:
+  frontend-network:
+    driver: bridge
