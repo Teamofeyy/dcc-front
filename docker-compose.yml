@@ -57,6 +57,7 @@ services:
       - frontend
     networks:
       - frontend-network
+      - app-network
 
   certbot:
     image: certbot/certbot
