@@ -1,13 +1,10 @@
-'use client'
-
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
+import { useDeliveryStats } from '@/hooks/use-delivery-stats'
 
 export default function DeliveriesChart() {
-  const data = [
-    { name: 'Ontime', value: 78, color: '#F67366' },
-    { name: 'In Progress', value: 12, color: '#FFF6DF' },
-    { name: 'Delayed', value: 10, color: '#2C2D5B' },
-  ]
+  const { data, loading } = useDeliveryStats()
+
+  if (loading) return <div>Загрузка...</div>
 
   return (
     <div className="flex flex-col items-center">
@@ -33,7 +30,9 @@ export default function DeliveriesChart() {
 
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <span className="text-3xl font-bold">78</span>
+            <span className="text-3xl font-bold">
+              {data.find((d) => d.name === 'Доставлено')?.value ?? 0}
+            </span>
             <span className="text-lg text-gray-500">%</span>
           </div>
         </div>

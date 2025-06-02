@@ -2,6 +2,7 @@ import { instanse } from '@/api/axios.api'
 import {
   setTokenToLocalStorage,
   getTokenFromLocalStorage,
+  setRoleToLocalStorage,
 } from '@/helpers/localstorage.helper'
 import type { IUserData } from '@/types/types'
 
@@ -19,8 +20,10 @@ export const AuthService = {
   async getMe() {
     const token = getTokenFromLocalStorage()
     const response = await instanse.get('/users/user/me/', {
-      params: token,
+      params: { token },
     })
+    const role = response.data.role.name
+    setRoleToLocalStorage('role', role)
     return response.data
   },
 }

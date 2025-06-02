@@ -2,9 +2,11 @@ import type React from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { LayoutDashboard, Package, Truck, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
 
 export default function Sidebar() {
   const location = useLocation()
+  const role = getRoleFromLocalStorage()
 
   return (
     <div className="hidden md:flex flex-col w-64 border-r bg-white">
@@ -31,12 +33,16 @@ export default function Sidebar() {
           >
             Доставки
           </NavItem>
-          <NavItem href="/dashboard" icon={User}>
-            Пользователи
-          </NavItem>
-          <NavItem href="/dashboard" icon={Truck}>
-            Транспорт
-          </NavItem>
+          {role !== 'user' && (
+            <NavItem href="/dashboard" icon={User}>
+              Пользователи
+            </NavItem>
+          )}
+          {role !== 'user' && (
+            <NavItem href="/dashboard" icon={Truck}>
+              Транспорт
+            </NavItem>
+          )}
         </nav>
       </div>
     </div>

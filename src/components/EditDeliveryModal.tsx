@@ -15,8 +15,10 @@ import {
   SelectItem,
 } from '@/components/ui/select'
 import { useEffect, useState } from 'react'
+import { useDeleteDelivery } from '@/hooks/useDeliveries'
+import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
 
-interface Delivery {
+type Delivery = {
   weight: number
   dimensions: string
   address_in: string
@@ -43,21 +45,47 @@ export default function EditDeliveryModal({
   onSave,
 }: EditDeliveryModalProps) {
   const [formData, setFormData] = useState<Delivery>(delivery)
+  const deleteDelivery = useDeleteDelivery()
+  const role = getRoleFromLocalStorage()
 
   useEffect(() => {
-    setFormData(delivery)
+    let updated = { ...delivery }
+    // Если дата доставки в прошлом, статус становится delivered
+    if (updated.datetime_out && new Date(updated.datetime_out) < new Date()) {
+      updated.status = 'delivered'
+    }
+    setFormData(updated)
   }, [delivery])
 
   const handleInputChange = <K extends keyof Delivery>(
     field: K,
     value: Delivery[K]
   ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => {
+      let next = { ...prev, [field]: value }
+      // Если изменили дату доставки и она в прошлом, статус delivered
+      if (
+        field === 'datetime_out' &&
+        typeof value === 'string' &&
+        value &&
+        new Date(value) < new Date()
+      ) {
+        next.status = 'delivered'
+      }
+      return next
+    })
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSave(formData)
+  }
+
+  const handleDelete = async () => {
+    if (window.confirm('Удалить эту доставку?')) {
+      await deleteDelivery.mutateAsync(delivery.id)
+      onClose()
+    }
   }
 
   return (
@@ -143,10 +171,7 @@ export default function EditDeliveryModal({
                 type="number"
                 value={formData.user_delivery_id}
                 onChange={(e) =>
-                  handleInputChange(
-                    'user_delivery_id',
-                    parseInt(e.target.value)
-                  )
+                  handleInputChange('user_delivery_id', parseInt(e.target.value))
                 }
               />
             </div>
@@ -173,6 +198,16 @@ export default function EditDeliveryModal({
             <Button type="button" variant="outline" onClick={onClose}>
               Отмена
             </Button>
+            {(role === 'superadmin' || role === 'admin' || role === 'manager') && (
+              <Button
+                type="button"
+                variant="destructive"
+                onClick={handleDelete}
+                disabled={deleteDelivery.status === 'pending'}
+              >
+                {deleteDelivery.status === 'pending' ? 'Удаление...' : 'Удалить'}
+              </Button>
+            )}
             <Button
               type="submit"
               className="bg-[#2C2D5B] text-white hover:bg-[#443e75]"

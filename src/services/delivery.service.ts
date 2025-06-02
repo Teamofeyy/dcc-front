@@ -25,7 +25,7 @@ export const DeliveryService = {
 
   async getMy(): Promise<DeliveryGet[]> {
     const token = getTokenFromLocalStorage()
-    const res = await instanse.get<DeliveryGet[]>('/delivery/user/me/', {
+    const res = await instanse.get<DeliveryGet[]>('/delivery/user/me', {
       params: { token },
     })
     return res.data

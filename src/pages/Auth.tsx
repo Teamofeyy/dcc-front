@@ -62,6 +62,7 @@ const Auth: FC = () => {
         await AuthService.registration(data as RegisterFormData)
         await AuthService.login({ login: data.login, password: data.password })
       }
+      await AuthService.getMe()
 
       setIsAuthenticated(true)
     } catch (error) {

@@ -1,5 +1,4 @@
 name: Frontend build & deploy
-
 on:
   push:
     branches: [ master ]

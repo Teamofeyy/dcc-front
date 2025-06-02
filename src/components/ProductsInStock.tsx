@@ -1,13 +1,14 @@
-import { DeliveryService } from '@/services/delivery.service'
 import { Badge } from '@/components/ui/badge'
 import { MapPin, Clock, Package, Pencil } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   statusColorMap,
   getStatusLabel,
   getTimeRemaining,
 } from '@/helpers/delivery.helper'
 import EditDeliveryModal from './EditDeliveryModal'
+import { useDeliveries, useUpdateDelivery } from '@/hooks/useDeliveries'
+import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
 
 type Delivery = {
   weight: number
@@ -24,40 +25,61 @@ type Delivery = {
 
 type Props = {
   variant?: 'compact' | 'detailed'
+  statusFilter?: string | null
+  createdFrom?: string | null
+  createdTo?: string | null
+  arrivalFrom?: string | null
+  arrivalTo?: string | null
 }
 
-export default function ProductsInStock({ variant = 'compact' }: Props) {
+export default function ProductsInStock({
+  variant = 'compact',
+  statusFilter,
+  createdFrom,
+  createdTo,
+  arrivalFrom,
+  arrivalTo,
+}: Props) {
   const [selectedDelivery, setSelectedDelivery] = useState<Delivery | null>(
     null
   )
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [deliveries, setDeliveries] = useState<Delivery[]>([])
-  const [loading, setLoading] = useState(true)
+  const { data: deliveries = [], isLoading } = useDeliveries()
+  const updateDelivery = useUpdateDelivery()
+  const role = getRoleFromLocalStorage()
 
   const handleEdit = (delivery: Delivery) => {
     setSelectedDelivery(delivery)
     setIsEditModalOpen(true)
   }
 
-  useEffect(() => {
-    const fetchDeliveries = async () => {
-      try {
-        const data = await DeliveryService.getAll()
-        setDeliveries(data)
-      } catch (error) {
-        console.error('Ошибка при загрузке доставок:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchDeliveries()
-  }, [])
+  let filteredDeliveries = deliveries
+  if (statusFilter)
+    filteredDeliveries = filteredDeliveries.filter(
+      (d) => d.status === statusFilter
+    )
+  if (createdFrom)
+    filteredDeliveries = filteredDeliveries.filter(
+      (d) => d.datetime_in >= createdFrom
+    )
+  if (createdTo)
+    filteredDeliveries = filteredDeliveries.filter(
+      (d) => d.datetime_in <= createdTo + 'T23:59'
+    )
+  if (arrivalFrom)
+    filteredDeliveries = filteredDeliveries.filter(
+      (d) => d.datetime_out >= arrivalFrom
+    )
+  if (arrivalTo)
+    filteredDeliveries = filteredDeliveries.filter(
+      (d) => d.datetime_out <= arrivalTo + 'T23:59'
+    )
 
-  if (loading) return <div className="px-6 py-4">Загрузка...</div>
+  if (isLoading) return <div className="px-6 py-4">Загрузка...</div>
 
   return (
     <div className="space-y-4">
-      {deliveries.slice(0, 5).map((delivery) => {
+      {filteredDeliveries.slice(0, 5).map((delivery) => {
         const shortFrom = delivery.address_in.split(',')[0]
         const shortTo = delivery.address_out.split(',')[0]
 
@@ -113,7 +135,7 @@ export default function ProductsInStock({ variant = 'compact' }: Props) {
                   {getTimeRemaining(delivery.datetime_out)}
                 </div>
 
-                {variant === 'detailed' && (
+                {role !== 'user' && (
                   <button
                     onClick={() => handleEdit(delivery)}
                     className="text-gray-600 hover:underline text-sm flex items-center gap-1"
@@ -135,10 +157,20 @@ export default function ProductsInStock({ variant = 'compact' }: Props) {
             setIsEditModalOpen(false)
             setSelectedDelivery(null)
           }}
-          onSave={(updatedDelivery) => {
-            console.log('Сохранение доставки:', updatedDelivery)
-            setIsEditModalOpen(false)
-            setSelectedDelivery(null)
+          onSave={async (updatedDelivery) => {
+            try {
+              await updateDelivery.mutateAsync({
+                id: updatedDelivery.id,
+                data: updatedDelivery,
+              })
+              // Query будет автоматически обновлён через invalidateQueries
+            } catch (error) {
+              console.error('Ошибка при обновлении:', error)
+              alert('Не удалось сохранить изменения.')
+            } finally {
+              setIsEditModalOpen(false)
+              setSelectedDelivery(null)
+            }
           }}
         />
       )}

@@ -14,6 +14,7 @@ import ShipmentsChart from '@/components/ShipmentsChart'
 
 export default function WeeklyShipmentsChart() {
   const [weekFilter, setWeekFilter] = useState('Эта неделя')
+
   return (
     <Card className="col-span-2 lg:col-span-1">
       <CardHeader className="flex flex-row items-center justify-between pb-2">

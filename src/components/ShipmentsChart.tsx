@@ -9,39 +9,25 @@ import {
   CartesianGrid,
   Tooltip,
 } from 'recharts'
+import { useShipmentsByWeekday } from '@/hooks/useShipmentsByWeekday'
 
 export default function ShipmentsChart() {
-  const data = [
-    { day: 'Пн', value: 17 },
-    { day: 'Вт', value: 14 },
-    { day: 'Ср', value: 18 },
-    { day: 'Чт', value: 3 },
-    { day: 'Пт', value: 7 },
-    { day: 'Сб', value: 16 },
-    { day: 'Вс', value: 20 },
-  ]
+  const { data, loading } = useShipmentsByWeekday()
+
+  if (loading || data.length === 0) {
+    return <div className="text-center">Загрузка данных...</div>
+  }
 
   return (
     <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
-          margin={{
-            top: 10,
-            right: 30,
-            left: 0,
-            bottom: 0,
-          }}
+          margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="day" />
-          <YAxis
-            width={40}
-            tickFormatter={(value) => {
-              if (value === 0) return '0'
-              return value
-            }}
-          />
+          <YAxis width={40} allowDecimals={false} />
           <Tooltip
             formatter={(value) => [`${value}`, 'Кол-во']}
             labelFormatter={(label) => `День: ${label}`}
