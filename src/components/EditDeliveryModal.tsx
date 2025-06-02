@@ -48,6 +48,8 @@ export default function EditDeliveryModal({
   const deleteDelivery = useDeleteDelivery()
   const role = getRoleFromLocalStorage()
 
+  const isPastDelivery = !!formData.datetime_out && new Date(formData.datetime_out) < new Date()
+
   useEffect(() => {
     const updated = { ...delivery }
     // Если дата доставки в прошлом, статус становится delivered
@@ -62,7 +64,7 @@ export default function EditDeliveryModal({
     value: Delivery[K]
   ) => {
     setFormData((prev) => {
-      const next = { ...prev, [field]: value }
+      let next = { ...prev, [field]: value }
       // Если изменили дату доставки и она в прошлом, статус delivered
       if (
         field === 'datetime_out' &&
@@ -70,6 +72,10 @@ export default function EditDeliveryModal({
         value &&
         new Date(value) < new Date()
       ) {
+        next.status = 'delivered'
+      }
+      // Если пытаются изменить статус вручную, но дата доставки в прошлом — игнорировать
+      if (field === 'status' && isPastDelivery) {
         next.status = 'delivered'
       }
       return next
@@ -183,6 +189,7 @@ export default function EditDeliveryModal({
               <Select
                 value={formData.status}
                 onValueChange={(value) => handleInputChange('status', value)}
+                disabled={isPastDelivery}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Выберите статус" />
@@ -191,7 +198,6 @@ export default function EditDeliveryModal({
                   <SelectItem value="pending">Ожидает</SelectItem>
                   <SelectItem value="in_transit">В пути</SelectItem>
                   <SelectItem value="delivered">Доставлено</SelectItem>
-                  <SelectItem value="delayed">Задержка</SelectItem>
                 </SelectContent>
               </Select>
             </div>

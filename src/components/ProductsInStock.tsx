@@ -75,11 +75,14 @@ export default function ProductsInStock({
       (d) => d.datetime_out <= arrivalTo + 'T23:59'
     )
 
+  const deliveriesToShow =
+    variant === 'compact' ? filteredDeliveries.slice(0, 5) : filteredDeliveries
+
   if (isLoading) return <div className="px-6 py-4">Загрузка...</div>
 
   return (
     <div className="space-y-4">
-      {filteredDeliveries.slice(0, 5).map((delivery) => {
+      {deliveriesToShow.map((delivery) => {
         const shortFrom = delivery.address_in.split(',')[0]
         const shortTo = delivery.address_out.split(',')[0]
 
