@@ -1,6 +1,6 @@
 import DeliveryFormFields from './DeliveryFormFields'
 
-export type { CreateDeliveryModalProps } 
+export type { CreateDeliveryModalProps }
 
 import {
   Dialog,
@@ -8,8 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import type { DeliveryCreate } from '@/types/delivery.types'
@@ -63,7 +61,11 @@ export default function CreateDeliveryModal({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <DeliveryFormFields formData={formData} onChange={handleInputChange} minDeliveryDate={minDeliveryDate} />
+          <DeliveryFormFields
+            formData={formData}
+            onChange={handleInputChange}
+            minDeliveryDate={minDeliveryDate}
+          />
           <div className="flex justify-end gap-4 mt-6 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose}>
               Отмена
@@ -79,4 +81,4 @@ export default function CreateDeliveryModal({
       </DialogContent>
     </Dialog>
   )
-} 
+}

@@ -54,7 +54,7 @@ export default function DashboardPage() {
             <>
               <StatsSection role={role} />
               <div className="grid gap-6 mt-6 md:grid-cols-2">
-                <WeeklyShipmentsChart role={role} />
+                <WeeklyShipmentsChart />
                 <DeliveriesCard />
               </div>
               <div className="mt-6">

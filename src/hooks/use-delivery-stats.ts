@@ -14,7 +14,8 @@ export function useDeliveryStats() {
   const inProgress = deliveries.filter((d) => d.status === 'in_transit').length
   const delayed = deliveries.filter((d) => d.status === 'pending').length
 
-  const percent = (count: number) => (total ? Math.round((count / total) * 100) : 0)
+  const percent = (count: number) =>
+    total ? Math.round((count / total) * 100) : 0
 
   const data: ChartData = [
     { name: 'Доставлено', value: percent(delivered), color: '#F67366' },

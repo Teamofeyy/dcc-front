@@ -49,7 +49,7 @@ export default function EditDeliveryModal({
   const role = getRoleFromLocalStorage()
 
   useEffect(() => {
-    let updated = { ...delivery }
+    const updated = { ...delivery }
     // Если дата доставки в прошлом, статус становится delivered
     if (updated.datetime_out && new Date(updated.datetime_out) < new Date()) {
       updated.status = 'delivered'
@@ -62,7 +62,7 @@ export default function EditDeliveryModal({
     value: Delivery[K]
   ) => {
     setFormData((prev) => {
-      let next = { ...prev, [field]: value }
+      const next = { ...prev, [field]: value }
       // Если изменили дату доставки и она в прошлом, статус delivered
       if (
         field === 'datetime_out' &&
@@ -171,7 +171,10 @@ export default function EditDeliveryModal({
                 type="number"
                 value={formData.user_delivery_id}
                 onChange={(e) =>
-                  handleInputChange('user_delivery_id', parseInt(e.target.value))
+                  handleInputChange(
+                    'user_delivery_id',
+                    parseInt(e.target.value)
+                  )
                 }
               />
             </div>
@@ -198,16 +201,20 @@ export default function EditDeliveryModal({
             <Button type="button" variant="outline" onClick={onClose}>
               Отмена
             </Button>
-            {(role === 'superadmin' || role === 'admin' || role === 'manager') && (
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={handleDelete}
-                disabled={deleteDelivery.status === 'pending'}
-              >
-                {deleteDelivery.status === 'pending' ? 'Удаление...' : 'Удалить'}
-              </Button>
-            )}
+            {(role === 'superadmin' ||
+              role === 'admin' ||
+              role === 'manager') && (
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={deleteDelivery.status === 'pending'}
+                >
+                  {deleteDelivery.status === 'pending'
+                    ? 'Удаление...'
+                    : 'Удалить'}
+                </Button>
+              )}
             <Button
               type="submit"
               className="bg-[#2C2D5B] text-white hover:bg-[#443e75]"
