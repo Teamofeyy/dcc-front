@@ -9,6 +9,7 @@ import {
 import EditDeliveryModal from './EditDeliveryModal'
 import { useDeliveries, useUpdateDelivery } from '@/hooks/useDeliveries'
 import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
+import { toast, Toaster } from 'sonner'
 
 type Delivery = {
   weight: number
@@ -169,7 +170,7 @@ export default function ProductsInStock({
               // Query будет автоматически обновлён через invalidateQueries
             } catch (error) {
               console.error('Ошибка при обновлении:', error)
-              alert('Не удалось сохранить изменения.')
+              toast.error('Не удалось сохранить изменения.')
             } finally {
               setIsEditModalOpen(false)
               setSelectedDelivery(null)
@@ -177,6 +178,7 @@ export default function ProductsInStock({
           }}
         />
       )}
+      <Toaster richColors position="top-right" />
     </div>
   )
 }

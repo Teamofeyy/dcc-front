@@ -7,6 +7,8 @@ import CreateDeliveryModal from '@/components/CreateDeliveryModal'
 import { useCreateDelivery } from '@/hooks/useDeliveries'
 import type { DeliveryCreate } from '@/types/delivery.types'
 import DeliveriesFilterSidebar from '@/components/DeliveriesFilterSidebar'
+import { toast } from 'sonner'
+import { Toaster } from 'sonner'
 
 export default function Deliveries() {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -23,7 +25,13 @@ export default function Deliveries() {
 
   const handleCreate = (data: DeliveryCreate) => {
     createDelivery.mutate(data, {
-      onSuccess: handleClose,
+      onSuccess: () => {
+        handleClose()
+        toast.success('Доставка успешно создана!')
+      },
+      onError: () => {
+        toast.error('Не удалось создать доставку')
+      },
     })
   }
 
@@ -90,6 +98,7 @@ export default function Deliveries() {
           arrivalTo={arrivalTo}
           setArrivalTo={setArrivalTo}
         />
+        <Toaster richColors position="top-right" />
       </div>
     </div>
   )

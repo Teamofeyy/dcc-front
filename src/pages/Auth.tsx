@@ -18,6 +18,8 @@ import { Form } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import type { AxiosError } from 'axios'
 import Field from '@/components/Field'
+import { Toaster } from '@/components/ui/sonner'
+import { toast } from 'sonner'
 
 type LoginFormData = z.infer<typeof LoginSchema>
 type RegisterFormData = z.infer<typeof RegisterSchema>
@@ -68,7 +70,7 @@ const Auth: FC = () => {
     } catch (error) {
       const err = error as AxiosError<{ message: string }>
       const message = err.response?.data?.message || 'Произошла ошибка запроса'
-      alert(message)
+      toast.error(message)
     }
   }
 
@@ -142,6 +144,7 @@ const Auth: FC = () => {
           </CardFooter>
         </Card>
       </div>
+      <Toaster richColors position="top-right" />
     </div>
   )
 }
