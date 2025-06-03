@@ -80,9 +80,9 @@ export default function CreateDeliveryModal({
                 <Label htmlFor="weight">Вес (кг)</Label>
                 <Input
                   type="number"
-                  step="0.1"
+                  step="1"
                   {...form.register('weight', { valueAsNumber: true })}
-                  min={0.01}
+                  min={1}
                   className={
                     form.formState.errors.weight ? 'border-red-500' : ''
                   }
