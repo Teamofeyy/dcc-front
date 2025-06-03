@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface DeliveriesFilterSidebarProps {
   isOpen: boolean
   onClose: () => void
@@ -128,4 +126,4 @@ const DeliveriesFilterSidebar: React.FC<DeliveriesFilterSidebarProps> = ({
   )
 }
 
-export default DeliveriesFilterSidebar 
+export default DeliveriesFilterSidebar

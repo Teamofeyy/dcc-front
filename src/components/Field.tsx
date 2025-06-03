@@ -1,4 +1,4 @@
-import type { FC } from 'react'
+import type { InputHTMLAttributes } from 'react'
 import {
   FormField,
   FormItem,
@@ -7,34 +7,40 @@ import {
   FormMessage,
 } from './ui/form'
 import { Input } from './ui/input'
-import type { Control } from 'react-hook-form'
+import type {
+  Control,
+  FieldPath,
+  FieldValues,
+  RegisterOptions,
+} from 'react-hook-form'
 
-type FieldProps = {
-  control: Control<any>
-  name: 'login' | 'password' | 'name'
+type FieldProps<T extends FieldValues> = {
+  control: Control<T>
+  name: FieldPath<T>
   label: string
-  type?: string
-  placeholder?: string
-}
+  registerOptions?: RegisterOptions<T, FieldPath<T>>
+} & InputHTMLAttributes<HTMLInputElement>
 
-const Field: FC<FieldProps> = ({
+const Field = <T extends FieldValues>({
   control,
   name,
   label,
   type = 'text',
-  placeholder,
-}) => (
+  registerOptions,
+  ...inputProps
+}: FieldProps<T>) => (
   <FormField
     control={control}
     name={name}
+    rules={registerOptions}
     render={({ field }) => (
       <FormItem>
         <FormLabel className="text-gray-700">{label}</FormLabel>
         <FormControl>
           <Input
             {...field}
+            {...inputProps}
             type={type}
-            placeholder={placeholder}
             className="border-gray-200 focus-visible:ring-[#FF6B6B] focus-visible:ring-opacity-50"
           />
         </FormControl>

@@ -5,7 +5,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   Select,
@@ -14,29 +13,38 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useDeleteDelivery } from '@/hooks/useDeliveries'
 import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
-
-type Delivery = {
-  weight: number
-  dimensions: string
-  address_in: string
-  address_out: string
-  datetime_in: string
-  datetime_out: string
-  transport_id: number
-  id: number
-  user_delivery_id: number
-  status: string
-}
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Form } from '@/components/ui/form'
+import Field from './Field'
+import type { DeliveryGet } from '@/types/delivery.types'
 
 interface EditDeliveryModalProps {
-  delivery: Delivery
+  delivery: DeliveryGet
   isOpen: boolean
   onClose: () => void
-  onSave: (delivery: Delivery) => void
+  onSave: (delivery: DeliveryGet) => void
 }
+
+const DeliveryEditSchema = z.object({
+  weight: z.number({ required_error: 'Укажите вес' }).min(1, 'Минимум 1кг'),
+  dimensions: z.string().min(1, 'Укажите габариты'),
+  address_in: z.string().min(1, 'Укажите адрес отправки'),
+  address_out: z.string().min(1, 'Укажите адрес получения'),
+  datetime_in: z.string().min(1, 'Укажите дату отправки'),
+  datetime_out: z.string().min(1, 'Укажите дату доставки'),
+  transport_id: z
+    .number({ required_error: 'Укажите ID транспорта' })
+    .int()
+    .min(1, 'ID транспорта должен быть больше 0'),
+  status: z.string(),
+})
+
+type DeliveryEditForm = z.infer<typeof DeliveryEditSchema>
 
 export default function EditDeliveryModal({
   delivery,
@@ -44,47 +52,52 @@ export default function EditDeliveryModal({
   onClose,
   onSave,
 }: EditDeliveryModalProps) {
-  const [formData, setFormData] = useState<Delivery>(delivery)
   const deleteDelivery = useDeleteDelivery()
   const role = getRoleFromLocalStorage()
 
-  const isPastDelivery = !!formData.datetime_out && new Date(formData.datetime_out) < new Date()
+  // Если дата доставки в прошлом, статус становится delivered
+  const isPastDelivery =
+    !!delivery.datetime_out && new Date(delivery.datetime_out) < new Date()
+
+  const form = useForm<DeliveryEditForm>({
+    resolver: zodResolver(DeliveryEditSchema),
+    defaultValues: {
+      weight: delivery.weight,
+      dimensions: delivery.dimensions,
+      address_in: delivery.address_in,
+      address_out: delivery.address_out,
+      datetime_in: delivery.datetime_in,
+      datetime_out: delivery.datetime_out,
+      transport_id: delivery.transport_id,
+      status: isPastDelivery ? 'delivered' : delivery.status,
+    },
+    mode: 'onTouched',
+  })
 
   useEffect(() => {
-    const updated = { ...delivery }
-    // Если дата доставки в прошлом, статус становится delivered
-    if (updated.datetime_out && new Date(updated.datetime_out) < new Date()) {
-      updated.status = 'delivered'
-    }
-    setFormData(updated)
+    form.reset({
+      weight: delivery.weight,
+      dimensions: delivery.dimensions,
+      address_in: delivery.address_in,
+      address_out: delivery.address_out,
+      datetime_in: delivery.datetime_in,
+      datetime_out: delivery.datetime_out,
+      transport_id: delivery.transport_id,
+      status:
+        !!delivery.datetime_out && new Date(delivery.datetime_out) < new Date()
+          ? 'delivered'
+          : delivery.status,
+    })
+    // eslint-disable-next-line
   }, [delivery])
 
-  const handleInputChange = <K extends keyof Delivery>(
-    field: K,
-    value: Delivery[K]
-  ) => {
-    setFormData((prev) => {
-      let next = { ...prev, [field]: value }
-      // Если изменили дату доставки и она в прошлом, статус delivered
-      if (
-        field === 'datetime_out' &&
-        typeof value === 'string' &&
-        value &&
-        new Date(value) < new Date()
-      ) {
-        next.status = 'delivered'
-      }
-      // Если пытаются изменить статус вручную, но дата доставки в прошлом — игнорировать
-      if (field === 'status' && isPastDelivery) {
-        next.status = 'delivered'
-      }
-      return next
-    })
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSave(formData)
+  const handleSubmit = (values: DeliveryEditForm) => {
+    // Если дата доставки в прошлом, статус всегда delivered
+    const status =
+      !!values.datetime_out && new Date(values.datetime_out) < new Date()
+        ? 'delivered'
+        : values.status
+    onSave({ ...delivery, ...values, status })
   }
 
   const handleDelete = async () => {
@@ -98,97 +111,57 @@ export default function EditDeliveryModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl p-6">
         <DialogHeader>
-          <DialogTitle>Редактировать доставку #{formData.id}</DialogTitle>
+          <DialogTitle>Редактировать доставку #{delivery.id}</DialogTitle>
         </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4 mt-4 grid grid-cols-2 gap-4"
+          >
+            <Field
+              label="Вес (кг)"
+              name="weight"
+              type="number"
+              step="1"
+              min={1}
+              control={form.control}
+            />
+            <Field label="Габариты" name="dimensions" control={form.control} />
+            <Field
+              label="Адрес отправки"
+              name="address_in"
+              control={form.control}
+            />
+            <Field
+              label="Адрес получения"
+              name="address_out"
+              control={form.control}
+            />
+            <Field
+              label="Дата отправки"
+              name="datetime_in"
+              type="datetime-local"
+              control={form.control}
+            />
+            <Field
+              label="Дата доставки"
+              name="datetime_out"
+              type="datetime-local"
+              control={form.control}
+            />
+            <Field
+              label="ID транспорта"
+              name="transport_id"
+              type="number"
+              min={1}
+              control={form.control}
+            />
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="weight">Вес (кг)</Label>
-              <Input
-                type="number"
-                step="0.1"
-                value={formData.weight}
-                onChange={(e) =>
-                  handleInputChange('weight', parseFloat(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="dimensions">Габариты</Label>
-              <Input
-                value={formData.dimensions}
-                onChange={(e) =>
-                  handleInputChange('dimensions', e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="address_in">Адрес отправки</Label>
-              <Input
-                value={formData.address_in}
-                onChange={(e) =>
-                  handleInputChange('address_in', e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="address_out">Адрес получения</Label>
-              <Input
-                value={formData.address_out}
-                onChange={(e) =>
-                  handleInputChange('address_out', e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="datetime_in">Дата отправки</Label>
-              <Input
-                type="datetime-local"
-                value={formData.datetime_in}
-                onChange={(e) =>
-                  handleInputChange('datetime_in', e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="datetime_out">Дата доставки</Label>
-              <Input
-                type="datetime-local"
-                value={formData.datetime_out}
-                onChange={(e) =>
-                  handleInputChange('datetime_out', e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="transport_id">ID транспорта</Label>
-              <Input
-                type="number"
-                value={formData.transport_id}
-                onChange={(e) =>
-                  handleInputChange('transport_id', parseInt(e.target.value))
-                }
-              />
-            </div>
-            <div>
-              <Label htmlFor="user_delivery_id">ID пользователя</Label>
-              <Input
-                type="number"
-                value={formData.user_delivery_id}
-                onChange={(e) =>
-                  handleInputChange(
-                    'user_delivery_id',
-                    parseInt(e.target.value)
-                  )
-                }
-              />
-            </div>
             <div className="col-span-2">
               <Label htmlFor="status">Статус</Label>
               <Select
-                value={formData.status}
-                onValueChange={(value) => handleInputChange('status', value)}
+                value={form.watch('status')}
+                onValueChange={(value) => form.setValue('status', value)}
                 disabled={isPastDelivery}
               >
                 <SelectTrigger>
@@ -200,35 +173,40 @@ export default function EditDeliveryModal({
                   <SelectItem value="delivered">Доставлено</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-4 mt-6 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Отмена
-            </Button>
-            {(role === 'superadmin' ||
-              role === 'admin' ||
-              role === 'manager') && (
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={handleDelete}
-                  disabled={deleteDelivery.status === 'pending'}
-                >
-                  {deleteDelivery.status === 'pending'
-                    ? 'Удаление...'
-                    : 'Удалить'}
-                </Button>
+              {form.formState.errors.status && (
+                <p className="text-red-500 text-xs mt-1">
+                  {form.formState.errors.status.message}
+                </p>
               )}
-            <Button
-              type="submit"
-              className="bg-[#2C2D5B] text-white hover:bg-[#443e75]"
-            >
-              Сохранить
-            </Button>
-          </div>
-        </form>
+            </div>
+
+            <div className="flex justify-end gap-4 mt-6 pt-4 border-t col-span-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Отмена
+              </Button>
+              {(role === 'superadmin' ||
+                role === 'admin' ||
+                role === 'manager') && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={handleDelete}
+                    disabled={deleteDelivery.status === 'pending'}
+                  >
+                    {deleteDelivery.status === 'pending'
+                      ? 'Удаление...'
+                      : 'Удалить'}
+                  </Button>
+                )}
+              <Button
+                type="submit"
+                className="bg-[#2C2D5B] text-white hover:bg-[#443e75]"
+              >
+                Сохранить
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )

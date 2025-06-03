@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import ProductsInStock from '@/components/ProductsInStock'
 import { Link } from 'react-router-dom'
+import DeliveryItems from '@/components/DeliveryItems'
 
 export default function ActiveDeliveries() {
   return (
@@ -15,7 +15,7 @@ export default function ActiveDeliveries() {
         </Link>
       </CardHeader>
       <CardContent className="px-0">
-        <ProductsInStock variant="compact" />
+        <DeliveryItems variant="compact" />
       </CardContent>
     </Card>
   )

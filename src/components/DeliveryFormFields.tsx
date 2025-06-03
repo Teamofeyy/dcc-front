@@ -4,12 +4,20 @@ import type { DeliveryCreate } from '@/types/delivery.types'
 
 interface DeliveryFormFieldsProps {
   formData: DeliveryCreate
-  onChange: <K extends keyof DeliveryCreate>(field: K, value: DeliveryCreate[K]) => void
+  onChange: <K extends keyof DeliveryCreate>(
+    field: K,
+    value: DeliveryCreate[K]
+  ) => void
   disabled?: boolean
   minDeliveryDate?: string
 }
 
-export default function DeliveryFormFields({ formData, onChange, disabled, minDeliveryDate }: DeliveryFormFieldsProps) {
+export default function DeliveryFormFields({
+  formData,
+  onChange,
+  disabled,
+  minDeliveryDate,
+}: DeliveryFormFieldsProps) {
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
@@ -83,4 +91,4 @@ export default function DeliveryFormFields({ formData, onChange, disabled, minDe
       </div>
     </div>
   )
-} 
+}

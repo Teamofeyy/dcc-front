@@ -33,7 +33,7 @@ type Props = {
   arrivalTo?: string | null
 }
 
-export default function ProductsInStock({
+export default function DeliveryItems({
   variant = 'compact',
   statusFilter,
   createdFrom,

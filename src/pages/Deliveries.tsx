@@ -1,7 +1,7 @@
-import ProductsInStock from '@/components/ProductsInStock'
+import ProductsInStock from '@/components/DeliveryItems'
 import Sidebar from '@/components/Sidebar'
 import { Button } from '@/components/ui/button'
-import { Filter, Menu, Plus } from 'lucide-react'
+import { Filter, Plus } from 'lucide-react'
 import { useState } from 'react'
 import CreateDeliveryModal from '@/components/CreateDeliveryModal'
 import { useCreateDelivery } from '@/hooks/useDeliveries'
@@ -9,6 +9,7 @@ import type { DeliveryCreate } from '@/types/delivery.types'
 import DeliveriesFilterSidebar from '@/components/DeliveriesFilterSidebar'
 import { toast } from 'sonner'
 import { Toaster } from 'sonner'
+import Header from '@/components/Header'
 
 export default function Deliveries() {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -39,15 +40,7 @@ export default function Deliveries() {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1">
-        <header className="flex items-center justify-between p-4 bg-white border-b">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Свернуть меню</span>
-            </Button>
-            <h1 className="text-xl font-medium">Управление доставками</h1>
-          </div>
-        </header>
+        <Header title="Управление доставками" />
         <main className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>

@@ -1,17 +1,16 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import Sidebar from '@/components/Sidebar'
 import StatsSection from '@/components/StatsSection'
 import WeeklyShipmentsChart from '@/components/WeeklyShipment'
 import DeliveriesCard from '@/components/DeliveriesCard'
 import ActiveDeliveries from '@/components/ActiveDeliveries'
-import { Menu } from 'lucide-react'
 import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
 import { useEffect, useState } from 'react'
 import { useDeliveries, useCreateDelivery } from '@/hooks/useDeliveries'
 import WelcomeCard from '@/components/WelcomeCard'
 import CreateDeliveryModal from '@/components/CreateDeliveryModal'
 import type { DeliveryCreate } from '@/types/delivery.types'
+import Header from '@/components/Header'
 
 export default function DashboardPage() {
   const [role, setRole] = useState<'user' | 'manager' | 'admin' | 'superadmin'>(
@@ -38,15 +37,7 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       <div className="flex-1">
-        <header className="flex items-center justify-between p-4 bg-white border-b">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="md:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Свернуть меню</span>
-            </Button>
-            <h1 className="text-xl font-medium">Дэшборд</h1>
-          </div>
-        </header>
+        <Header title="Дэшборд" />
         <main className="p-6">
           {role === 'user' && !isLoading && deliveries.length === 0 ? (
             <WelcomeCard onCreateDelivery={() => setIsCreateOpen(true)} />
