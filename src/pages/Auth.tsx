@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { AuthService } from '@/services/auth.service'
-import { useState, useEffect, type FC } from 'react'
+import { useState, type FC } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,7 +40,7 @@ const RegisterSchema = LoginSchema.extend({
 })
 const Auth: FC = () => {
   const navigate = useNavigate()
-  const { isAuthenticated, setIsAuthenticated } = useAuth()
+  const { setIsAuthenticated } = useAuth()
   const [isLogin, setIsLogin] = useState<boolean>(true)
 
   const form = useForm<LoginFormData | RegisterFormData>({
