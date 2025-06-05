@@ -19,7 +19,7 @@ export const AuthService = {
   },
   async getMe() {
     const token = getTokenFromLocalStorage()
-    const response = await instanse.get('/users/user/me/', {
+    const response = await instanse.get('/users/user/me', {
       params: { token },
     })
     const role = response.data.role.name
