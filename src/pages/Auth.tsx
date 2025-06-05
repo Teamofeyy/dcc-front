@@ -43,12 +43,6 @@ const Auth: FC = () => {
   const { isAuthenticated, setIsAuthenticated } = useAuth()
   const [isLogin, setIsLogin] = useState<boolean>(true)
 
-  useEffect(() => {
-    if (isAuthenticated === true) {
-      navigate('/dashboard', { replace: true })
-    }
-  }, [isAuthenticated, navigate])
-
   const form = useForm<LoginFormData | RegisterFormData>({
     resolver: zodResolver(isLogin ? LoginSchema : RegisterSchema),
     defaultValues: isLogin
@@ -65,8 +59,8 @@ const Auth: FC = () => {
         await AuthService.login({ login: data.login, password: data.password })
       }
       await AuthService.getMe()
-
       setIsAuthenticated(true)
+      navigate('/dashboard', { replace: true })
     } catch (error) {
       const err = error as AxiosError<{ message: string }>
       const message = err.response?.data?.message || 'Произошла ошибка запроса'
