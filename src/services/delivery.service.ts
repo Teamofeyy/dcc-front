@@ -33,7 +33,7 @@ export const DeliveryService = {
 
   async getById(delivery_id: number): Promise<DeliveryGet> {
     const token = getTokenFromLocalStorage()
-    const res = await instanse.get<DeliveryGet>(`/delivery/${delivery_id}/`, {
+    const res = await instanse.get<DeliveryGet>(`/delivery/${delivery_id}`, {
       params: { token },
     })
     return res.data
@@ -45,7 +45,7 @@ export const DeliveryService = {
   ): Promise<DeliveryGet> {
     const token = getTokenFromLocalStorage()
     const res = await instanse.put<DeliveryGet>(
-      `/delivery/${delivery_id}/`,
+      `/delivery/${delivery_id}`,
       data,
       {
         params: { token },
@@ -56,7 +56,7 @@ export const DeliveryService = {
 
   async delete(delivery_id: number): Promise<void> {
     const token = getTokenFromLocalStorage()
-    await instanse.delete(`/delivery/${delivery_id}/`, {
+    await instanse.delete(`/delivery/${delivery_id}`, {
       params: { token },
     })
   },
