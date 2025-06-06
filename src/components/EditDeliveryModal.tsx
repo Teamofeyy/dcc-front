@@ -188,6 +188,7 @@ export default function EditDeliveryModal({
                 role === 'admin' ||
                 role === 'manager') && (
                   <Button
+                    className='text-red-500 border border-red-500'
                     type="button"
                     variant="destructive"
                     onClick={handleDelete}

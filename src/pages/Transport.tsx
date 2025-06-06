@@ -14,7 +14,8 @@ export default function Transport() {
   const updateTransport = useUpdateTransport()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedTransport, setSelectedTransport] = useState<TransportGet | null>(null)
+  const [selectedTransport, setSelectedTransport] =
+    useState<TransportGet | null>(null)
 
   const openCreate = () => {
     setSelectedTransport(null)
@@ -31,7 +32,10 @@ export default function Transport() {
     setSelectedTransport(null)
   }
 
-  const handleCreate = async (data: { capacity: number; dimensions: string }) => {
+  const handleCreate = async (data: {
+    capacity: number
+    dimensions: string
+  }) => {
     try {
       await createTransport.mutateAsync(data)
       toast.success('Транспорт создан')

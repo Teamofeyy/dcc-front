@@ -1,8 +1,15 @@
 import type React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, Package, Truck, User } from 'lucide-react'
+import { LayoutDashboard, LogOut, Package, Truck, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { getRoleFromLocalStorage } from '@/helpers/localstorage.helper'
+import {
+  getRoleFromLocalStorage,
+  removeTokenFromLocalStorage,
+} from '@/helpers/localstorage.helper'
+
+const handleLogout = () => {
+  removeTokenFromLocalStorage('token')
+}
 
 export default function Sidebar() {
   const location = useLocation()
@@ -47,6 +54,18 @@ export default function Sidebar() {
               Транспорт
             </NavItem>
           )}
+
+          <div className="p-4 border-t">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 w-full text-sm text-gray-500 hover:text-red-600 transition-all"
+            >
+              <LogOut className="h-5 w-5" />
+              <span>
+                <Link to={'/auth'}>Выйти</Link>
+              </span>
+            </button>
+          </div>
         </nav>
       </div>
     </div>

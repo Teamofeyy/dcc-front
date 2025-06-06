@@ -21,7 +21,7 @@ export interface TransportGet {
 export const TransportService = {
   async create(data: TransportCreate): Promise<TransportGet> {
     const token = getTokenFromLocalStorage()
-    const res = await instanse.post<TransportGet>('/transport', data, {
+    const res = await instanse.post<TransportGet>('/transport/', data, {
       params: { token },
     })
     return res.data
@@ -29,7 +29,7 @@ export const TransportService = {
 
   async getAll(): Promise<TransportGet[]> {
     const token = getTokenFromLocalStorage()
-    const res = await instanse.get<TransportGet[]>('/transport', {
+    const res = await instanse.get<TransportGet[]>('/transport/', {
       params: { token },
     })
     return res.data
