@@ -1,10 +1,6 @@
 // components/Users.tsx
 import UserModal from './UserModal'
-import {
-  useUsers,
-  useCreateUser,
-  useUpdateUser,
-} from '@/hooks/useUser'
+import { useUsers, useCreateUser, useUpdateUser } from '@/hooks/useUser'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Plus, Edit } from 'lucide-react'
@@ -65,7 +61,7 @@ export default function UsersCard() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold">Пользователи</h2>
-        <Button className="bg-[#2C2D5B] text-white" onClick={openCreate}>
+        <Button className="bg-[#312E81] text-white" onClick={openCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Новый пользователь
         </Button>
