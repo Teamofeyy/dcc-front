@@ -34,12 +34,16 @@ export default function Sidebar() {
             Доставки
           </NavItem>
           {role !== 'user' && (
-            <NavItem href="/dashboard" icon={User}>
+            <NavItem href="/users" icon={User}>
               Пользователи
             </NavItem>
           )}
           {role !== 'user' && (
-            <NavItem href="/dashboard" icon={Truck}>
+            <NavItem
+              href="/transport"
+              icon={Truck}
+              active={location.pathname.startsWith('/transport')}
+            >
               Транспорт
             </NavItem>
           )}

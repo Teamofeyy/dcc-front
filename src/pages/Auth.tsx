@@ -8,7 +8,7 @@ import {
   CardFooter,
 } from '@/components/ui/card'
 import { AuthService } from '@/services/auth.service'
-import { useState, type FC } from 'react'
+import { useState, useEffect, type FC } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -40,8 +40,14 @@ const RegisterSchema = LoginSchema.extend({
 })
 const Auth: FC = () => {
   const navigate = useNavigate()
-  const { setIsAuthenticated } = useAuth()
+  const { isAuthenticated, setIsAuthenticated } = useAuth()
   const [isLogin, setIsLogin] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (isAuthenticated === true) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [isAuthenticated, navigate])
 
   const form = useForm<LoginFormData | RegisterFormData>({
     resolver: zodResolver(isLogin ? LoginSchema : RegisterSchema),
@@ -59,8 +65,8 @@ const Auth: FC = () => {
         await AuthService.login({ login: data.login, password: data.password })
       }
       await AuthService.getMe()
+
       setIsAuthenticated(true)
-      navigate('/dashboard', { replace: true })
     } catch (error) {
       const err = error as AxiosError<{ message: string }>
       const message = err.response?.data?.message || 'Произошла ошибка запроса'
