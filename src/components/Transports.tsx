@@ -27,7 +27,7 @@ export default function Transports({ onEdit }: TransportsProps) {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
                   <div className="relative h-12 w-12 overflow-hidden rounded-md border bg-indigo-50 flex items-center justify-center">
-                    <Truck className="h-6 w-6 text-indigo-600" />
+                    <Truck className="h-6 w-6 text-[#312E81]" />
                   </div>
                   <div>
                     <div>
@@ -39,7 +39,11 @@ export default function Transports({ onEdit }: TransportsProps) {
 
                 {role !== 'user' && (
                   <div className="flex gap-2">
-                    <Button onClick={() => onEdit(transport)} variant="outline" size="sm">
+                    <Button
+                      onClick={() => onEdit(transport)}
+                      variant="outline"
+                      size="sm"
+                    >
                       <Edit className="h-4 w-4 mr-1" />
                       Редактировать
                     </Button>
@@ -51,7 +55,7 @@ export default function Transports({ onEdit }: TransportsProps) {
                 {/* Размер */}
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-md bg-indigo-50 flex items-center justify-center">
-                    <Ruler className="h-5 w-5 text-indigo-600" />
+                    <Ruler className="h-5 w-5 text-[#312E81]" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Размер</p>
@@ -62,7 +66,7 @@ export default function Transports({ onEdit }: TransportsProps) {
                 {/* Вместимость */}
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-md bg-indigo-50 flex items-center justify-center">
-                    <Weight className="h-5 w-5 text-indigo-600" />
+                    <Weight className="h-5 w-5 text-[#312E81]" />
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Вместимость</p>
